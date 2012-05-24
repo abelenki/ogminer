@@ -70,9 +70,9 @@ def mb_substr(s,start,length=None,encoding="UTF-8"):
   return (u_s[start:(start+length)] if length else u_s[start:]).encode(encoding)
                 
 def main():
-    application = webapp.WSGIApplication([('/', MainHandler)],
-                                         debug=True)
-    util.run_wsgi_app(application)
+  application = webapp.WSGIApplication([('/', MainHandler)],
+                                       debug=True)
+  util.run_wsgi_app(application)
 
 if __name__ == '__main__':
-    main()
+  main()
