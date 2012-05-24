@@ -1,0 +1,19 @@
+== OG Miner
+A simple web service for GA to fetch all or desired Open Graph (OG) contents from web pages.
+
+== Usage (demo)
+
+* Sample Request to fetch only desired OG keys: *
+
+curl -d 'og_keys=["og:title", "og:type"]' -d 'url=http://www.youtube.com/watch?v=fUYaosyR4bE' 'http://og-miner.appspot.com'
+
+* Sample Response: *
+[{"og:title": "Lily Allen - Not Fair"}, {"og:type": "video"}]
+
+* Sample Request to fetch all the OG data: *
+
+curl -d 'url=https://vimeo.com/21216091' 'http://og-miner.appspot.com'
+
+* Sample Response: *
+ 
+[{"og:site_name": "Vimeo"}, {"og:type": "article"}, {"og:description": "Soon every home will have a robot helper. Don&#039;t worry. It&#039;s perfectly safe. Written, Directed &amp; Edited by Ruairi Robinson Starring Max Records from &quot;Where The Wild Things Are&quot;. Cinematography by Macgregor Music by Olafur Arnalds courtesy of&hellip;"}, {"og:title": "Blinky&trade;"}, {"og:image": "http:\/\/b.vimeocdn.com\/ts\/136\/375\/136375440_640.jpg"}, {"og:url": "http:\/\/vimeo.com\/21216091"}, {"og:video": "http:\/\/vimeo.com\/moogaloop.swf?clip_id=21216091"}, {"og:video:secure_url": "https:\/\/vimeo.com\/moogaloop.swf?clip_id=21216091"}, {"og:video:type": "application\/x-shockwave-flash"}, {"og:video:width": "640"}, {"og:video:height": "360"}]
