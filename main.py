@@ -21,14 +21,14 @@ class MainHandler(webapp.RequestHandler):
     self.response.out.write('See http://github.com/mustafaturan/ogminer')
   
   def post(self):
-    # Get url to fetch
+  	# Get url to fetch
   	url = self.request.get('url')
   	if url == '': return
   	
   	# Optional desired keys for filtering
   	og_keys = self.request.get('og_keys')
 
-    # User-Agent
+  	# User-Agent
   	user_agent = "OGM v0.1 (Open Graph Miner)"
   	
   	# OG Object (list)
@@ -37,7 +37,7 @@ class MainHandler(webapp.RequestHandler):
   	# than once.
   	og = []
 
-    # Fetch url
+  	# Fetch url
   	result = urlfetch.fetch(url, headers={
   	  'User-Agent': user_agent, 'Accept': 'text/html'})
   	
