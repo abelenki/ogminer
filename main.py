@@ -30,12 +30,6 @@ class MainHandler(webapp.RequestHandler):
 
   	# User-Agent
   	user_agent = "OGM v0.1 (Open Graph Miner)"
-  	
-  	# OG Object (list)
-  	# In here I prefered python list because OG supports to 
-  	# have arrays which means a OG hash key can be used more
-  	# than once.
-  	og = []
 
   	# Fetch url
   	result = urlfetch.fetch(url, headers={
@@ -43,27 +37,34 @@ class MainHandler(webapp.RequestHandler):
   	
   	# Parse OG data
   	if result.status_code == 200:
-  	  rc = result.content
-  	  rc = re.sub("([\n\r\t\s ]+)", ' ', rc)
-  	  head_start_pos = rc.find("<head")
-  	  rc = mb_substr(rc, head_start_pos, rc.find("head>", head_start_pos+4))
-  	  fInfoList = re.findall('(<meta(([^a-zA-Z0-9]+)(property|content)([^a-zA-Z0-9=]*)=([^"]*)"([^"]+)")(([^a-zA-Z0-9]+)(property|content)([^a-zA-Z0-9=]*)=([^"]*)"([^"]+)")([^>]*)>|<meta(([^a-zA-Z0-9]+)(property|content)([^a-zA-Z0-9=]*)=([^\']*)\'([^\']+)\')(([^a-zA-Z0-9]+)(property|content)([^a-zA-Z0-9=]*)=([^\']*)\'([^\']+)\')([^>]*)>)', rc)
-  	  for fInfo in fInfoList:
-  	    c,p = None, None
-  	    for i,fC in enumerate(fInfo):
-  	      if fC == 'content':
-  	        c = fInfo[i+3]
-  	      elif fC == "property":
-  	        p = fInfo[i+3]
-
-  	    if p and c:
-  	      if og_keys != '':
-  	        if p in og_keys: og.append({''+p: c})
-  	      else:
-  	        og.append({''+p: c})
-  	  
+  	  og = og_parse(result.content, og_keys)
   	  # Print as json
   	  self.response.out.write(json.dumps(og))
+
+def og_parse(rc, og_keys):
+  # OG Object (list)
+	# In here I prefered python list because OG supports to 
+	# have arrays which means a OG hash key can be used more
+	# than once.
+  og = []
+  rc = re.sub("([\n\r\t\s ]+)", ' ', rc)
+  head_start_pos = rc.find("<head")
+  rc = mb_substr(rc, head_start_pos, rc.find("head>", head_start_pos+4))
+  og_meta_tags = re.findall('(<meta(([^a-zA-Z0-9]+)(property|content)([^a-zA-Z0-9=]*)=([^"]*)"([^"]+)")(([^a-zA-Z0-9]+)(property|content)([^a-zA-Z0-9=]*)=([^"]*)"([^"]+)")([^>]*)>|<meta(([^a-zA-Z0-9]+)(property|content)([^a-zA-Z0-9=]*)=([^\']*)\'([^\']+)\')(([^a-zA-Z0-9]+)(property|content)([^a-zA-Z0-9=]*)=([^\']*)\'([^\']+)\')([^>]*)>)', rc)
+  for og_meta in og_meta_tags:
+    c,p = None, None
+    for i,val in enumerate(og_meta):
+      if val == 'content':
+        c = og_meta[i+3]
+      elif val == "property":
+        p = og_meta[i+3]
+
+    if p and c:
+      if og_keys != '':
+        if p in og_keys: og.append({''+p: c})
+      else:
+        og.append({''+p: c})
+  return og
 
 def mb_substr(s,start,length=None,encoding="UTF-8"):
   u_s = s.decode(encoding)
