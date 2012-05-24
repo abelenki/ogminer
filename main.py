@@ -21,31 +21,31 @@ class MainHandler(webapp.RequestHandler):
     self.response.out.write('See http://github.com/mustafaturan/ogminer')
   
   def post(self):
-  	# Get url to fetch
-  	url = self.request.get('url')
-  	if url == '': return
-  	
-  	# Optional desired keys for filtering
-  	og_keys = self.request.get('og_keys')
+    # Get url to fetch
+    url = self.request.get('url')
+    if url == '': return
 
-  	# User-Agent
-  	user_agent = "OGM v0.1 (Open Graph Miner)"
+    # Optional desired keys for filtering
+    og_keys = self.request.get('og_keys')
 
-  	# Fetch url
-  	result = urlfetch.fetch(url, headers={
-  	  'User-Agent': user_agent, 'Accept': 'text/html'})
-  	
-  	# Parse OG data
-  	if result.status_code == 200:
-  	  og = og_parse(result.content, og_keys)
-  	  # Print as json
-  	  self.response.out.write(json.dumps(og))
+    # User-Agent
+    user_agent = "OGM v0.1 (Open Graph Miner)"
+
+    # Fetch url
+    result = urlfetch.fetch(url, headers={
+      'User-Agent': user_agent, 'Accept': 'text/html'})
+
+    # Parse OG data
+    if result.status_code == 200:
+      og = og_parse(result.content, og_keys)
+      # Print as json
+      self.response.out.write(json.dumps(og))
 
 def og_parse(rc, og_keys):
   # OG Object (list)
-	# In here I prefered python list because OG supports to 
-	# have arrays which means a OG hash key can be used more
-	# than once.
+  # In here I prefered python list because OG supports to 
+  # have arrays which means a OG hash key can be used more
+  # than once.
   og = []
   rc = re.sub("([\n\r\t\s ]+)", ' ', rc)
   head_start_pos = rc.find("<head")
